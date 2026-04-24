@@ -124,4 +124,42 @@ document.addEventListener("DOMContentLoaded", async () => {
   sections.forEach(section => {
     observer.observe(section);
   });
+
+  // Lightbox functionality
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+  const closeBtn = document.querySelector(".lightbox-close");
+  const portfolioImages = document.querySelectorAll(".portfolio-img");
+
+  if (lightbox && lightboxImg) {
+    portfolioImages.forEach(img => {
+      img.addEventListener("click", () => {
+        lightbox.style.display = "flex";
+        // slight delay to allow display flex to apply before opacity transitions
+        setTimeout(() => lightbox.classList.add("active"), 10);
+        lightboxImg.src = img.src;
+      });
+    });
+
+    const closeLightbox = () => {
+      lightbox.classList.remove("active");
+      setTimeout(() => lightbox.style.display = "none", 200); // Wait for transition
+    };
+
+    closeBtn.addEventListener("click", closeLightbox);
+    
+    // Close on background click
+    lightbox.addEventListener("click", (e) => {
+      if (e.target !== lightboxImg) {
+        closeLightbox();
+      }
+    });
+
+    // Close on escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && lightbox.classList.contains("active")) {
+        closeLightbox();
+      }
+    });
+  }
 });
