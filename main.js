@@ -1,29 +1,95 @@
-const showsData = [
-  { date: "Oct 24", venue: "The Velvet Lounge", location: "Seattle, WA", link: "#" },
-  { date: "Oct 28", venue: "Electric Avenue", location: "Portland, OR", link: "#" },
-  { date: "Nov 02", venue: "The Fillmore (Opener)", location: "San Francisco, CA", link: "#" },
-  { date: "Nov 15", venue: "Desert Skies Festival", location: "Joshua Tree, CA", link: "#" },
-  { date: "Dec 05", venue: "Starlight Ballroom", location: "Los Angeles, CA", link: "#" }
+// Google Calendar Configuration
+// Instructions: Fill in these values to fetch live shows from your public Google Calendar.
+// To get your Calendar ID: Go to Google Calendar > Settings > Integrate Calendar > Calendar ID
+const GOOGLE_API_KEY = "YOUR_API_KEY_HERE";
+const CALENDAR_ID = "YOUR_CALENDAR_ID_HERE";
+
+// Fallback data if API key is not set
+const fallbackShows = [
+  { date: "May 1", venue: "Milk Bar", location: "Inglewood", link: "#" },
+  { date: "May 13", venue: "The Bird", location: "Northbridge", link: "#" }
 ];
 
-document.addEventListener("DOMContentLoaded", () => {
+async function fetchUpcomingShows() {
+  if (GOOGLE_API_KEY === "YOUR_API_KEY_HERE" || CALENDAR_ID === "YOUR_CALENDAR_ID_HERE") {
+    console.warn("Google API Key or Calendar ID is not set. Using fallback data.");
+    return fallbackShows;
+  }
+
+  const timeMin = new Date().toISOString();
+  // Fetch from Google Calendar API
+  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${GOOGLE_API_KEY}&timeMin=${timeMin}&singleEvents=true&orderBy=startTime&maxResults=10`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Failed to fetch calendar events");
+    const data = await response.json();
+
+    return data.items.map(event => {
+      // Format Date
+      const eventDate = new Date(event.start.dateTime || event.start.date);
+      const dateStr = eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+      // Parse Description for Links (looks for anything that starts with http or https)
+      let ticketLink = "";
+      const desc = event.description || "";
+
+      // We will create a dummy element to strip HTML from Google's description easily
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = desc;
+      const strippedDesc = tempDiv.textContent || tempDiv.innerText || "";
+
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const match = strippedDesc.match(urlRegex);
+      if (match && match.length > 0) {
+        ticketLink = match[0]; // Take the first URL found
+      }
+
+      return {
+        date: dateStr,
+        venue: event.summary || "TBA",
+        location: event.location || "Location TBA",
+        link: ticketLink
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching shows:", error);
+    return fallbackShows;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
   // Update copyright year
   document.getElementById("year").textContent = new Date().getFullYear();
 
   // Populate shows
   const showsContainer = document.getElementById("shows-container");
   if (showsContainer) {
-    showsData.forEach(show => {
-      const showDiv = document.createElement("div");
-      showDiv.className = "show-item";
-      showDiv.innerHTML = `
-        <div class="show-date">${show.date}</div>
-        <div class="show-venue">${show.venue}</div>
-        <div class="show-location">${show.location}</div>
-        <a href="${show.link}" class="show-tickets">Tickets</a>
-      `;
-      showsContainer.appendChild(showDiv);
-    });
+    showsContainer.innerHTML = "<p style='text-align: center; color: var(--text-secondary); grid-column: 1/-1;'>Loading shows...</p>";
+    const showsData = await fetchUpcomingShows();
+    showsContainer.innerHTML = ""; // Clear loading stat 
+
+    if (showsData.length === 0) {
+      showsContainer.innerHTML = "<p style='text-align: center; color: var(--text-secondary); grid-column: 1/-1;'>No upcoming shows scheduled. Check back soon!</p>";
+    } else {
+      showsData.forEach(show => {
+        const showDiv = document.createElement("div");
+        showDiv.className = "show-item";
+
+        // Render Ticket Button or "Free Entry" Text
+        let ticketHTML = show.link
+          ? `<a href="${show.link}" target="_blank" rel="noopener noreferrer" class="show-tickets">Tickets</a>`
+          : `<span class="show-tickets disabled" style="border-color:transparent; color: var(--text-secondary); padding-left:0;">Free / No Tickets</span>`;
+
+        showDiv.innerHTML = `
+          <div class="show-date">${show.date}</div>
+          <div class="show-venue">${show.venue}</div>
+          <div class="show-location">${show.location}</div>
+          ${ticketHTML}
+        `;
+        showsContainer.appendChild(showDiv);
+      });
+    }
   }
 
   // Header Scroll Effect
