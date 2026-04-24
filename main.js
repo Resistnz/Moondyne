@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Render Ticket Button or "Free Entry" Text
         let ticketHTML = show.link
           ? `<a href="${show.link}" target="_blank" rel="noopener noreferrer" class="show-tickets">Tickets</a>`
-          : `<span class="show-tickets disabled" style="border-color:transparent; color: var(--text-secondary); padding-left:0;">Free / No Tickets</span>`;
+          : `<span class="show-tickets disabled" style="border-color:transparent; color: var(--text-secondary);">Free / No Tickets</span>`;
 
         showDiv.innerHTML = `
           <div class="show-date">${show.date}</div>

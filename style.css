@@ -277,11 +277,12 @@ section {
 
 .show-item {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr auto;
+  grid-template-columns: 1fr 2fr 1fr minmax(160px, auto);
   align-items: center;
-  padding: var(--spacing-md) 0;
+  padding: var(--spacing-md) var(--spacing-lg);
   border-bottom: 1px solid rgba(255,255,255,0.05);
   transition: background-color var(--transition-fast);
+  border-radius: 6px;
 }
 
 .show-item:hover {
@@ -306,7 +307,10 @@ section {
 }
 
 .show-tickets {
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   padding: 0.5rem 1.5rem;
   border: 1px solid var(--accent-color);
   color: var(--text-primary);
@@ -315,6 +319,7 @@ section {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   transition: all var(--transition-fast);
+  width: 100%;
 }
 
 .show-tickets:hover {
