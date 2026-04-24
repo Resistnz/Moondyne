@@ -6,8 +6,9 @@ const CALENDAR_ID = "YOUR_CALENDAR_ID_HERE";
 
 // Fallback data if API key is not set
 const fallbackShows = [
-  { date: "May 1", venue: "Milk Bar", location: "Inglewood", link: "#" },
-  { date: "May 13", venue: "The Bird", location: "Northbridge", link: "#" }
+  { date: "May 1", venue: "Milk Bar", location: "Inglewood", link: "https://milkbar.oztix.com.au/outlet/event/54315fb9-d74a-439d-9370-301aed875ee3?Event=237644" },
+  { date: "May 13", venue: "The Bird", location: "Northbridge", link: "#" },
+  { date: "June 13", venue: "Indian Ocean Hotel", location: "Scarborough", link: "" }
 ];
 
 async function fetchUpcomingShows() {
@@ -147,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     closeBtn.addEventListener("click", closeLightbox);
-    
+
     // Close on background click
     lightbox.addEventListener("click", (e) => {
       if (e.target !== lightboxImg) {
