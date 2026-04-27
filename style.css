@@ -362,6 +362,10 @@ section {
   filter: grayscale(80%) contrast(1.1);
 }
 
+#pf-1 {
+  object-position: center 25%;
+}
+
 .portfolio-item:hover .portfolio-img {
   transform: scale(1.05);
   filter: grayscale(0%) contrast(1);
@@ -440,6 +444,30 @@ section {
   background: var(--accent-color);
 }
 
+/* Contact Section */
+.contact-section {
+  padding: 80px 0 120px;
+  background-color: var(--surface-color);
+}
+
+.contact-button {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  border: 1px solid var(--accent-color);
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.contact-button:hover {
+  background-color: var(--accent-color);
+  color: var(--bg-color);
+}
+
 /* Footer */
 .site-footer {
   background-color: #050505;
@@ -480,6 +508,9 @@ section {
     max-width: 60vw;
   }
   .hero-img {
+    object-position: center;
+  }
+  #pf-1 {
     object-position: center;
   }
   .show-item {
