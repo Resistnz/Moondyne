@@ -163,4 +163,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   }
+
+  // Gallery Expand functionality
+  const galleryWrapper = document.getElementById("gallery-wrapper");
+  const seeMoreBtn = document.getElementById("see-more-btn");
+  const seeLessBtn = document.getElementById("see-less-btn");
+
+  if (galleryWrapper && seeMoreBtn && seeLessBtn) {
+    seeMoreBtn.addEventListener("click", () => {
+      galleryWrapper.classList.add("expanded");
+    });
+    
+    seeLessBtn.addEventListener("click", () => {
+      galleryWrapper.classList.remove("expanded");
+      document.getElementById("media").scrollIntoView({ behavior: 'smooth' });
+    });
+  }
 });
