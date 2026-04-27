@@ -248,7 +248,7 @@ h4 {
 }
 
 .band-name {
-  font-size: clamp(4rem, 10vw, 8rem);
+  font-size: clamp(2.5rem, 10vw, 8rem);
   line-height: 1;
   margin-bottom: var(--spacing-md);
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -681,8 +681,25 @@ section {
 }
 
 @media (max-width: 768px) {
+  .header-container {
+    padding: var(--spacing-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
   .logo-placeholder {
-    max-width: 60vw;
+    max-width: 100%;
+    min-width: auto;
+    flex-shrink: 0;
+  }
+
+  .main-nav ul {
+    gap: var(--spacing-sm);
+  }
+
+  .main-nav a {
+    font-size: 0.8rem;
   }
 
   .hero-img {
